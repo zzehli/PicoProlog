@@ -27,7 +27,7 @@ rule token = parse
   | "0o" ['0'- '7']+ as o                     { INT (int_of_string o) }
   | numeric+ '.' numeric+ as f                { FLOAT (float_of_string f) }
   | numeric+ '.' numeric+ ['E' 'e'] numeric+ as e { FLOAT (float_of_string e) }
-  | lowercase+ ['a' - 'z' '_' '0' - '9'] as a { ATOM a }
+  | lowercase+ ['a' - 'z' '_' '0' - '9']* as a { ATOM a }
   (* | '''                                      { atom lexbuf } *)
   
 

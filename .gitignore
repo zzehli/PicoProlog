@@ -33,3 +33,4 @@ _opam/
 # project specific
 aj_prolog/
 plan.md
+src/lexer.ml
