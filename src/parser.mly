@@ -26,5 +26,6 @@ expression:
  | INT                               { IntConst $1 }
  | FLOAT                             { FloatConst $1 }
  | VAR                               { VarExp $1 }
+ | ATOM                              { CompoundTerm ($1, [])}
  | ATOM LPAREN expression_list RPAREN  { CompoundTerm ($1, $3)}
     
