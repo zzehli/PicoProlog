@@ -8,7 +8,12 @@ let sign = ['+' '-']
 let numeric = ['0' - '9']
 let lowercase = ['a' - 'z']
 let uppercase = ['A' - 'Z']
-let letter = ['a' - 'z' 'A' - 'Z']
+let symbol = ['#' '+' '-' '.' ':' '<' '=' '>' '?' '@' '^' '~' '$' '&' ' ']
+
+let letter = lowercase | uppercase
+let all_character = numeric | lowercase | uppercase | symbol
+let float = sign ? numeric+ '.' numeric+ (['E' 'e'] sign ? numeric+) ? |
+            sign ? numeric+ ['E' 'e'] sign ? numeric+
 
 (* https://eclipseclp.org/doc/userman/umsroot143.html *)
 rule token = parse
@@ -18,17 +23,28 @@ rule token = parse
   | "?-"            { QUERY }
   | '('             { LPAREN }
   | ')'             { RPAREN }
-  | ','             { CONJUNCTION }
+  | ','             { COMMA }
   | '.'             { PERIOD }
 
   | sign ? numeric+ as i                      { INT (int_of_string i) }
   | "0b" ['0' '1']+ as b                      { INT (int_of_string b) }
   | "0x" ['0'- '9' 'a' - 'f']+ as x           { INT (int_of_string x) }
   | "0o" ['0'- '7']+ as o                     { INT (int_of_string o) }
-  | numeric+ '.' numeric+ as f                { FLOAT (float_of_string f) }
-  | numeric+ '.' numeric+ ['E' 'e'] numeric+ as e { FLOAT (float_of_string e) }
-  | lowercase+ ['a' - 'z' '_' '0' - '9']* as a { ATOM a }
-  (* | '''                                      { atom lexbuf } *)
+  | sign ? numeric+ '.' numeric+ as f         { FLOAT (float_of_string f) }
+  | float as f                                { FLOAT (float_of_string f) }
+  | (uppercase | '_') ['a' - 'z' 'A' - 'Z' '_' '0' - '9']* as u { VAR u }
+  | lowercase ['a' - 'z' 'A' - 'Z' '_' '0' - '9']* as a { ATOM a }
+  | ''' all_character* '''  as al             { ATOM al }                
+  | symbol+ as s                              { ATOM s }
+  | '%'_*'\n'                                 { token lexbuf }
+  | "/*"                                      { mline_comment 0 lexbuf }
+  | "*/"                                      { raise (Failure "unmatched closed comment")}
+
+and mline_comment n = parse
+  | _                            { mline_comment n lexbuf }
+  | "/*"                         { mline_comment (n+1) lexbuf }
+  | eof                          { raise (Failure "unmatched open comment")}
+  | "*/"                         { if n > 0 then mline_comment (n-1) lexbuf else token lexbuf}
   
 
     

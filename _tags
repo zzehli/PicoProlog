@@ -1,5 +1,5 @@
 #pass compiler flags for ocamlbuild Makefile
 #Doc: https://github.com/ocaml/ocamlbuild/blob/master/manual/manual.adoc#tags-and-the-_tags-file
 
-true: color(always)
-<test.*>: package(ounit2)
+true: color(always), explain, infer
+<test/*>: package(ounit2)

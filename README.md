@@ -31,7 +31,7 @@ The concrete syntax of PicoProlog is based on the ISO Prolog and ECLiPSe Prolog.
 	- variable: a sequence of letters, digits, or underscore characters beginning with an upper case letter or an underscore `_`: `X, _a1, Var, Number_case`
 	- atom: 1) a sequence of letters, digits or underscore characters beginning with a lower case letter 2) sequence of symbols 3) arbitrary characters enclosed in single quotes. Here are some examples `x1, rule_elim, '1', 'First Rule', +, -*-`
 	- compound term: a compound term is a structure composed of a name, which is an atom, and a list of terms enclosed by parenthesis as its arguments: `date(december, 25, "Christmas"), element(hydrogen, composition(1,0)), +(X, 1.0)`
-2. Comment: single line comments begin with `%` and multi-line comments are enclosed by `\*[content]*/`
+2. Comment: single line comments begin with `%` and multi-line comments are enclosed by `/*[content]*/`
 3. Special Symbols: 
 	- `:-` is called *rule*
 	- `?-` is called *query*
