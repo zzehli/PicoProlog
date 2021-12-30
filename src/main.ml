@@ -1,10 +1,8 @@
-open Lexer
-open Lexing
-
-let parse s =
-  let lexbuf = Lexing.from_string s in
-  let ast = Parser.main Lexer.token lexbuf in
-  ast
-  
-let _ =
-  parse "hi."
+open Lib
+open Ast
+let _ = 
+  print_string( (term_exp_to_string (CompoundTerm ("x", [])))^"\n");
+  print_string( (term_exp_to_string (CompoundTerm ("x", [IntConst 5])))^"\n");  
+  print_string( (term_exp_to_string (CompoundTerm ("x", [FloatConst 5.0])))^"\n");
+  print_string( (term_exp_to_string (CompoundTerm ("x", [VarExp "Y"])))^"\n");
+  print_string( (term_exp_to_string (CompoundTerm ("x", [VarExp "Case"; CompoundTerm ("x", [FloatConst 5.0])])))^"\n")    

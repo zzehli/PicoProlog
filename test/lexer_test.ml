@@ -1,5 +1,4 @@
 open OUnit2
-open Lexer
 
 let lexer_test =
   "Lexer">:::
