@@ -5,7 +5,7 @@
 %token <int> INT
 %token <float> FLOAT
 %token <string> VAR ATOM
-%token QUERY RULE SEMICOLON PLUS MINUS LPAREN RPAREN COMMA PERIOD EOF
+%token QUERY RULE LPAREN RPAREN COMMA PERIOD EOF
 
 
 %type <Ast.exp> main
@@ -14,13 +14,17 @@
 %%
 
 main:
- expression RULE expression_list PERIOD   { ClauseExp ($1, $3) }
+ head RULE expression_list PERIOD   { ClauseExp ($1, $3) }
  | QUERY expression_list PERIOD           { QueryExp $2 }
  | expression PERIOD                 { ClauseExp ($1, [])}
 
 expression_list:
  | expression                            { [$1] }
  | expression COMMA expression_list      { $1 :: $3  }
+
+head:
+| ATOM                              { CompoundTerm ($1, [])}
+| ATOM LPAREN expression_list RPAREN  { CompoundTerm ($1, $3)}
 
 expression:
  | INT                               { IntConst $1 }

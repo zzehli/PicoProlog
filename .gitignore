@@ -35,3 +35,5 @@ aj_prolog/
 plan.md
 src/lexer.ml
 *.dot
+parser_error
+ast_string

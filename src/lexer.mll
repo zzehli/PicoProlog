@@ -35,7 +35,6 @@ rule token = parse
   | (uppercase | '_') ['a' - 'z' 'A' - 'Z' '_' '0' - '9']* as u { VAR u }
   | lowercase ['a' - 'z' 'A' - 'Z' '_' '0' - '9']* as a { ATOM a }
   | ''' all_character* '''  as al             { ATOM al }                
-  | symbol+ as s                              { ATOM s }
   | '%'_*'\n'                                 { token lexbuf }
   | "/*"                                      { mline_comment 0 lexbuf }
   | "*/"                                      { raise (Failure "unmatched closed comment")}
