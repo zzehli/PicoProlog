@@ -38,6 +38,7 @@ let pos_string pos =
     and c = string_of_int ((colnum pos) + 1) in
     "line " ^ l ^ ", column " ^ c
 
+(* interact with the lexer and the parser*)
 let parse s =
     let lexbuf = Lexing.from_string s in
     try

@@ -3,9 +3,9 @@ open Ast
 
 let test_ast_to_string alst = List.map (fun s -> print_string((exp_to_string s)^"\n")) alst
 
-let _ =
+(* let _ = *)
   (* print_string (tlist_to_string (Lexer.get_all_tokens "sibling(X, Y) :- parent_child(Z, X), parent_child(Z, Y).")); *)
-  print_string ((exp_to_string (parse "?- sibling(X, Y), parent_child(Z, X), parent_child(Z, Y)."))^"\n")
+  (* print_string ((exp_to_string (parse "cat(tom). animal(X) :- cat(X). ?- animal(X)."))^"\n") *)
   
   (* test_ast_to_string [parse "cat :- 5."] *)
   (* test_ast_to_string [

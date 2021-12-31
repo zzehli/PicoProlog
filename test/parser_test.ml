@@ -1,6 +1,6 @@
 open OUnit2
 open Lib
-
+open Ast
 let parser_test =
   "Lexer">:::
   (List.map
@@ -10,11 +10,37 @@ let parser_test =
       in
         title >::
         (fun test_ctxt ->
-          assert_equal res (exp_to_string (parse arg))))
-          ["x.", "CompoundTerm (x, []):- []";
-          "cat(X).", "CompoundTerm (cat, [VarExp X]):- []";
-          "cat :- true.", "CompoundTerm (cat, []):- [CompoundTerm (true, [])]";
-          "sibling(X, Y) :- parent_child(Z, X), parent_child(Z, Y).", "CompoundTerm (sibling, [VarExp X; VarExp Y]):- [CompoundTerm (parent_child, [VarExp Z; VarExp X]); CompoundTerm (parent_child, [VarExp Z; VarExp Y])]";
-          "?- cat(X).", "?- [CompoundTerm (cat, [VarExp X])]";
-          "?- sibling(X, Y), parent_child(Z, X), parent_child(Z, Y).", "?- [CompoundTerm (sibling, [VarExp X; VarExp Y]); CompoundTerm (parent_child, [VarExp Z; VarExp X]); CompoundTerm (parent_child, [VarExp Z; VarExp Y])]"
+          assert_equal res  (parse arg)))
+          [
+            "x.", ClauseExp (
+                      CompoundTerm ("x",[]),[]
+                      );
+
+            "cat(X).", ClauseExp (
+                          CompoundTerm ("cat",[VarExp "X"]),[]
+                          );
+            
+            "cat :- true.", ClauseExp (
+                                CompoundTerm ("cat", []), [
+                                  CompoundTerm ("true", [])
+                                  ]
+                                );
+            
+            "sibling(X, Y) :- parent_child(Z, X), parent_child(Z, Y).", 
+                ClauseExp (
+                  CompoundTerm ("sibling", [VarExp "X"; VarExp "Y"]), [
+                    CompoundTerm ("parent_child", [VarExp "Z"; VarExp "X"]); CompoundTerm ("parent_child", [VarExp "Z"; VarExp "Y"])
+                    ]
+                );
+            
+            "?- cat(X).", QueryExp [
+              CompoundTerm ("cat", [VarExp "X"])
+              ];
+            
+            "?- sibling(tom, Y), parent_child(Z, X), parent_child(Z, Y).", 
+            QueryExp[
+              CompoundTerm ("sibling", [CompoundTerm ("tom", []); VarExp "Y"]);
+              CompoundTerm ("parent_child", [VarExp "Z"; VarExp "X"]);
+              CompoundTerm ("parent_child", [VarExp "Z"; VarExp "Y"])
+              ]
           ])

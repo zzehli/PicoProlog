@@ -22,6 +22,13 @@ which generate `test.byte`. Run the executable with
 ```
 ./test.byte
 ```
+# Prolog
+Prolog is a logic programming language that describes objects and their relationships. Here, the object is different from object in the object-oriented programs where objects carry methods and fields, but pieces of facts or evidence to form a web of knowledge (or relations). Prolog use logic to construct new facts based on given ones.
+
+There are three kind of expressions in Prolog:
+- *facts* about objects and their relationships
+- *rules* about objects and their relationships; these can be thought of as rules that desribe how to make new facts from given ones
+- *questions* about objects and their relationships
 
 # Concrete Syntax
 The concrete syntax of PicoProlog is based on the ISO Prolog and ECLiPSe Prolog. In prolog, the only data type is term, which is comprised of number, variable, atom, and compound term. Therefore, the central task is to define the syntax for term. Besides term, we also define comment, special symbols such as `:-` and `?-`, which are elements connecting terms to form clauses.
@@ -35,4 +42,15 @@ The concrete syntax of PicoProlog is based on the ISO Prolog and ECLiPSe Prolog.
 3. Special Symbols: 
 	- `:-` is called *rule*
 	- `?-` is called *query*
+
+# BNF Grammar
+This is where the concrete grammar and the abstract syntax comes together. We first list the BNF grammar and then describe how it describes the three kinds of expressions in Prolog: rule, fact, and question. 
+```
+<program>		  ::= <head> ":-" <expression_list> "." | "?-" <expression_list> "." | <expression> "."
+<expression_list> ::= <expression> | <expression> "," <expression_list>
+<head>			  ::= ATOM | ATOM "(" <expression_list> ")"
+<expression>	  ::= INT | FLOAT | VAR | ATOM | ATOM "(" <expression_list> ")"
+```
+
+
 

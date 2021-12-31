@@ -11,7 +11,6 @@ let lexer_test =
         (fun test_ctxt ->
           assert_equal res (Lexer.get_all_tokens arg)))
       ["x",  [ATOM "x"];
-      "-+-", [ATOM "-+-"];
       "'First Rule'", [ATOM "'First Rule'"];
       "-19.4e-10", [FLOAT (-1.94e-09)];
       "-1E-10", [FLOAT (-1E-10)];
