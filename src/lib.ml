@@ -45,3 +45,54 @@ let parse s =
       let ast = Parser.main Lexer.token lexbuf in ast
     with Parser.Error ->
       raise (Failure("Parser error at "^ (pos_string lexbuf.lex_curr_p)))
+
+(*
+  Apply a substitution sigma to term T, sigma = {X1 = t1, X2 = t2, ... Xn = tn}, where Xi are variables in T and ti are terms to substitute variables. The result of performing substitution T sigma is T', an instance of T.
+*)
+(*
+Substitutions are of the form: sigma = {X1 = t1, X2 = t2, ... Xn = tn}, where Xi are variables in T and ti are terms to substitute variables.
+*)
+type substitution = (term_exp * term_exp) list
+
+let subsitute var sub : term_exp = raise (Failure "hi")
+
+let rec contains term var : bool = match term with CompoundTerm (at, lst) -> 
+                                    List.fold_right (fun elem tf -> if tf then tf else contains elem var) lst false    
+                                    | VarExp m -> m = var
+                                    | _ -> false
+
+let apply_subst sigma var : term_exp = raise (Failure "hi")
+let rec unify termlst : substitution option = 
+    let rec addNewEqs lst1 lst2 acc =
+      match lst1, lst2 with
+        [], [] -> Some acc
+        | t::tl, t'::tl' -> addNewEqs tl tl' ((t, t')::acc)
+        | _ -> None
+    in
+    match termlst with
+      (* Delete *)
+      (s, t)::eqs when s = t -> unify eqs
+      (* Eliminate *)
+      | (VarExp(n), t)::eqs when not (contains t n) ->
+            let eqs' = List.map (fun (t1, t2) -> subsitute (n, t) t1, subsitute (n,   t) t2) eqs
+            in (match unify eqs' with 
+              None -> None
+              | Some(phi) -> Some((VarExp(n), apply_subst phi t)::phi))
+      (* Orient *)
+      | (s, VarExp(n))::eqs -> (unify ((VarExp(n), s)::eqs))
+      (* Decompose *)
+      | (CompoundTerm(at, lst), CompoundTerm(at', lst'))::eqs when at = at' ->
+              (match (addNewEqs lst lst' eqs) with
+                None -> None
+                | Some nl -> unify nl)
+      | _ -> None
+
+(*
+Renaming substitution
+*)
+
+(*
+unification:
+to solve equation AND
+to match a goal or a subgoal
+*)
