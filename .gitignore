@@ -37,3 +37,4 @@ src/lexer.ml
 *.dot
 parser_error
 ast_string
+family.pl

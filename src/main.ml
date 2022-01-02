@@ -1,9 +1,21 @@
 open Lib
 open Ast
+open Evaluator
 
 let test_ast_to_string alst = List.map (fun s -> print_string((exp_to_string s)^"\n")) alst
+(* 
+let _ =
+  print_string (subst_to_string(Some [(VarExp "X", VarExp "K");(VarExp "Y", VarExp "L")])^"\n");
+  print_string (subst_to_string(unify([(CompoundTerm("sibling", [VarExp "X"; VarExp "Y"]), CompoundTerm("sibling", [VarExp "K"; VarExp "L"]))]))^"\n");
+  print_string (subst_to_string(unify([(VarExp "X", VarExp "X")]))^"\n");
+  
+  print_string (subst_to_string(unify(
+    [
+      (VarExp "alpha", CompoundTerm("f", [VarExp "x"])); 
+      (CompoundTerm("g", [VarExp "alpha"; VarExp "alpha"]), CompoundTerm("g", [VarExp "alpha"; VarExp "beta"]))
+    ]))^"\n") *)
 
-(* let _ = *)
+
   (* print_string (tlist_to_string (Lexer.get_all_tokens "sibling(X, Y) :- parent_child(Z, X), parent_child(Z, Y).")); *)
   (* print_string ((exp_to_string (parse "cat(tom). animal(X) :- cat(X). ?- animal(X)."))^"\n") *)
   
