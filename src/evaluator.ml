@@ -41,6 +41,19 @@ let rec apply_subst sigma term : term_exp = match sigma with
                                     let term' = substitute (VarExp(var), sub) term in
                                     apply_subst xs term'
 
+(*
+apply a substitution to a list
+*)
+let apply_subst_lst sigma tlst : term_exp list = 
+                                List.map (apply_subst sigma) tlst
+
+(*
+add a new pair to existing substitution
+*)
+let subst_add phi new_add : substitution = (new_add::phi)
+(*
+unify given list of pairs of terms
+*)
 let rec unify termlst : substitution option = 
     let rec addNewEqs lst1 lst2 acc =
       match lst1, lst2 with
@@ -58,7 +71,7 @@ let rec unify termlst : substitution option =
             List.map (fun (t1, t2) -> substitute (VarExp(n), t) t1, substitute (VarExp(n),   t) t2) eqs
             in (match unify eqs' with 
               None -> None
-              | Some(phi) -> Some((VarExp(n), apply_subst phi t)::phi))
+              | Some(phi) -> Some(subst_add phi (VarExp(n), apply_subst phi t)))
       (* Orient *)
       | (s, VarExp(n))::eqs -> (unify ((VarExp(n), s)::eqs))
       (* Decompose *)
@@ -69,12 +82,37 @@ let rec unify termlst : substitution option =
       | _ -> None
 
 (*
-Renaming substitution
+check if given expression is fact, which is a clause without body
 *)
+let is_fact exp : bool = match exp with 
+                      ClauseExp (term, lst) when lst = [] -> true
+                      | _ -> false
+
+let term_hd exp : term_exp = match exp with ClauseExp(x, lst)  -> x
+                              | _ -> raise (Failure "Wrong expression: no head")
+
+let term_tl exp : term_exp list = match exp with ClauseExp(x, lst) -> lst
+                              | _  -> raise (
+                                Failure "Wrong expression: no tail"
+                                )
+
 
 (*
-unification:
-to solve equation AND
-to match a goal or a subgoal
+evaluate a query input against a database
 *)
+(* let rec eval_query db gl unvist: string = match gl with 
+        [] -> "true"
+        | g::glst -> if is_fact g then eval_query db glst else 
+          (List.map (fun rule -> match (unify [term_hd rule, g] with
+                                        None ->  
+                                        | Some sigma -> )) db)
+                                          
+ *)
+
+
+
+
+
+
+
 

@@ -30,6 +30,16 @@ There are three kind of expressions in Prolog:
 - *rules* about objects and their relationships; these can be thought of as rules that desribe how to make new facts from given ones
 - *questions* about objects and their relationships
 
+# BNF Grammar
+This is where the concrete grammar and the abstract syntax comes together. We first list the BNF grammar and then describe how it describes the three kinds of expressions in Prolog: rule, fact, and question. 
+```
+<program>		  ::= <head> ":-" <expression_list> "." | "?-" <expression_list> "." | <expression> "."
+<expression_list> ::= <expression> | <expression> "," <expression_list>
+<head>			  ::= ATOM | ATOM "(" <expression_list> ")"
+<expression>	  ::= INT | FLOAT | VAR | ATOM | ATOM "(" <expression_list> ")"
+```
+
+
 # Concrete Syntax
 The concrete syntax of PicoProlog is based on the ISO Prolog and ECLiPSe Prolog. In prolog, the only data type is term, which is comprised of number, variable, atom, and compound term. Therefore, the central task is to define the syntax for term. Besides term, we also define comment, special symbols such as `:-` and `?-`, which are elements connecting terms to form clauses.
 
@@ -42,15 +52,4 @@ The concrete syntax of PicoProlog is based on the ISO Prolog and ECLiPSe Prolog.
 3. Special Symbols: 
 	- `:-` is called *rule*
 	- `?-` is called *query*
-
-# BNF Grammar
-This is where the concrete grammar and the abstract syntax comes together. We first list the BNF grammar and then describe how it describes the three kinds of expressions in Prolog: rule, fact, and question. 
-```
-<program>		  ::= <head> ":-" <expression_list> "." | "?-" <expression_list> "." | <expression> "."
-<expression_list> ::= <expression> | <expression> "," <expression_list>
-<head>			  ::= ATOM | ATOM "(" <expression_list> ")"
-<expression>	  ::= INT | FLOAT | VAR | ATOM | ATOM "(" <expression_list> ")"
-```
-
-
 
