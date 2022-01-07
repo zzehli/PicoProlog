@@ -20,6 +20,9 @@ let parse s =
       raise (Failure("Parser error at "^ (pos_string lexbuf.lex_curr_p)))
 
 
+let rule_hd exp = 
+  match exp with ClauseExp(a, alist) -> a
+                | _ -> raise (Failure "wrong headcall input")
 (* ------------------------- PRINTING METHODS--------------------------------*)
 
 (* tokens to string*)
@@ -55,11 +58,27 @@ let rec exp_to_string = function
       String.concat "; " (List.map term_exp_to_string tlst)
       )^"]"
 
-let subst_to_string = function
-  | Some lst -> (match lst with [] -> "[]" 
-    | x::xs -> List.fold_left (fun str elem -> let (x, y) = elem in str ^(term_exp_to_string x) ^ "|--> " ^ (term_exp_to_string y )^ ";; ")  "" lst )
+
+let subst_to_string lst = 
+(match lst with [] -> "[]" 
+| x::xs -> List.fold_left (fun str elem -> let (x, y) = elem in str ^(term_exp_to_string x) ^ "|--> " ^ (term_exp_to_string y )^ ";; ")  "" lst )
+
+let unify_to_string = function
+  | Some lst -> subst_to_string lst
   | None -> "None"
 
+let match_rules_to_string_aux elem = match elem with
+ (subst, cl) ->
+    let sub_lst = subst_to_string subst in
+    "(" ^ sub_lst ^ exp_to_string cl ^ ")\n"
+  | _ -> raise (Failure "wrong input to matched to string")
+
+let match_rules_to_string lst =
+   List.fold_left (fun acc elem -> acc ^ (match_rules_to_string_aux elem))
+                  "" 
+                  lst
+
+                  
 (* 
   List.fold_right (
     fun elem tf -> if tf 

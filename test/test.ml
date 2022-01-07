@@ -10,4 +10,5 @@ let () =
   run_test_tt_main evaluator_test_contains;
   run_test_tt_main evaluator_test_subst;
   run_test_tt_main evaluator_test_app_subst;
-  run_test_tt_main evaluator_test_unify
+  run_test_tt_main evaluator_test_unify;
+  run_test_tt_main evaluator_test_match_rules

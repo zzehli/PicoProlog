@@ -112,5 +112,26 @@ let evaluator_test_unify =
   )
 
 
+  let evaluator_test_match_rules = 
+    "match rules" >::: 
+    (List.map
+    (fun (arg,res) ->
+      let (db, hd) = arg in
+      let title = term_exp_to_string hd 
+      in
+        title >::
+        (fun test_ctxt ->
+          assert_equal res (match_rules db hd))) [
+            ([ClauseExp (
+                CompoundTerm ("cat", [VarExp "X"]), 
+                [CompoundTerm("meow", [VarExp "X"; VarExp "Y"])]
+              )],
+            CompoundTerm("cat", [VarExp "Y"])), 
+            [[(VarExp "X1",VarExp "Y")],
+            ClauseExp (
+              CompoundTerm ("cat", [VarExp "X1"]), 
+              [CompoundTerm("meow", [VarExp "X1"; VarExp "Y1"])]
+            )]
 
+          ])
 

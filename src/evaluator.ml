@@ -95,24 +95,50 @@ let term_tl exp : term_exp list = match exp with ClauseExp(x, lst) -> lst
                               | _  -> raise (
                                 Failure "Wrong expression: no tail"
                                 )
+(*fresh var*)
+let (fresh, reset) =
+  let nxt = ref 0 in
+  let f () = (nxt := !nxt + 1; string_of_int (!nxt)) in
+  let r () = nxt := 0 in
+  (f, r)
 
+(* rename an expression *)
+let rec rename suffix = function
+   ClauseExp (exp, lst) -> ClauseExp(rename_term suffix exp, List.map (rename_term suffix) lst)
+  | _ as e -> e
+and rename_term suffix = function
+    VarExp(a) -> VarExp(a ^ suffix)
+    | CompoundTerm(a, alist) -> CompoundTerm(
+                                a,  
+                                List.map (rename_term suffix) alist)
+    | _ as e -> e
 
+(* Given a term, and a list of rules, find if the term unifies with any of the
+  term unifies with any of the (renamed) rules, if so save the substitution, 
+    then return the list of substitutions and corresponding rules *)
+let rec match_rules db hd = 
+  match db with [] -> []
+          | x::xs -> let x' = rename (fresh()) x in
+                     match(unify [(rule_hd x', hd)] ) with
+                     None -> match_rules xs hd
+                     | Some sigma -> (sigma, x')::match_rules xs hd
+
+(* let rec eval_query_solv  db [] : exp = match svt with
+    [] -> gl
+  (* choose the first goal from the goal list *)
+  | a::slst -> match db with rule::rlst -> 
+                let rule' = rename (fresh()) rule in  
+                (match rule' with ClauseExp(a', tl) ->  
+                  (match unify(a', a) with Some sigma -> 
+                    let svt' = tl @ slst in
+                    eval_query_solv (apply_subst sigma gl) db (apply_subst_lst sigma svt')
+                    | _ -> eval_query_solv(gl db svt)
+                  )
+                )
+                                  
 (*
+gl
 evaluate a query input against a database
 *)
-(* let rec eval_query db gl unvist: string = match gl with 
-        [] -> "true"
-        | g::glst -> if is_fact g then eval_query db glst else 
-          (List.map (fun rule -> match (unify [term_hd rule, g] with
-                                        None ->  
-                                        | Some sigma -> )) db)
-                                          
+let eval_query gl db = eval_query_solve resv db []
  *)
-
-
-
-
-
-
-
-

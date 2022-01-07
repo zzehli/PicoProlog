@@ -16,7 +16,7 @@ addons:
 
 # Install the specified version of OCaml
 before_install:
-  - opam init --auto-setup --comp="$OCAML_VERSION"
+  - opam init
 
 # Install the required dependencies
 install:
