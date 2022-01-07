@@ -87,8 +87,10 @@ let evaluator_test_unify =
       (fun test_ctxt ->
         assert_equal res (unify arg)))
         [ 
+          (*delete*)
           [(VarExp "X", VarExp "X")],
           Some [];
+          (*two compound terms; decompose*)
           [
             (
               CompoundTerm("sibling", [VarExp "X"; VarExp "Y"]), 
@@ -96,8 +98,10 @@ let evaluator_test_unify =
             )
           ], 
           Some [(VarExp "Y", VarExp "L");(VarExp "X", VarExp "K")];
+          (*var and compound term; orient*)
           [(CompoundTerm("banana", [VarExp "X"]), VarExp "Y")],
           Some [(VarExp "Y", CompoundTerm("banana", [VarExp "X"]))];
+          (*complex unification*)
           [
             (VarExp "alpha", CompoundTerm("f", [VarExp "x"])); 
             (
@@ -122,16 +126,50 @@ let evaluator_test_unify =
         title >::
         (fun test_ctxt ->
           assert_equal res (match_rules db hd))) [
-            ([ClauseExp (
+            ( (*one rule match*)
+              [ClauseExp (
                 CompoundTerm ("cat", [VarExp "X"]), 
                 [CompoundTerm("meow", [VarExp "X"; VarExp "Y"])]
-              )],
+               )
+              ],
             CompoundTerm("cat", [VarExp "Y"])), 
-            [[(VarExp "X1",VarExp "Y")],
-            ClauseExp (
-              CompoundTerm ("cat", [VarExp "X1"]), 
-              [CompoundTerm("meow", [VarExp "X1"; VarExp "Y1"])]
-            )]
+            [
+              [(VarExp "Y",VarExp "X1")],
+              ClauseExp (
+                CompoundTerm ("cat", [VarExp "X1"]), 
+                [CompoundTerm("meow", [VarExp "X1"; VarExp "Y1"])]
+              )
+            ];
+            (*empty match*)
+            ([ClauseExp (CompoundTerm("atom", [VarExp "X"]), [])],
+              CompoundTerm("atom", [VarExp "Y"; VarExp "X"])
+            ),
+              [];
+            (*two rules out of three match*)
+            (
+              [
+                ClauseExp (CompoundTerm("a", [VarExp "X"]), []);
+                ClauseExp (CompoundTerm("b", [VarExp "X"; VarExp "Y"]), []);
+                ClauseExp (
+                  CompoundTerm("b", [VarExp "Z"; VarExp"Y"]), 
+                  [CompoundTerm("meow", [VarExp "X"; VarExp "Y"])]
+                )
+              ],
+              CompoundTerm("b", [VarExp "K"; VarExp "Y"])
+            ),
+            [
+              (
+                [ (VarExp "Y", VarExp "Y2");(VarExp "K", VarExp "X2")],
+                ClauseExp (CompoundTerm("b", [VarExp "X2"; VarExp "Y2"]), [])
+              );
+              (
+                [(VarExp "Y", VarExp "Y3");(VarExp "K", VarExp "Z3")],
+                ClauseExp (
+                  CompoundTerm("b", [VarExp "Z3"; VarExp"Y3"]), 
+                  [CompoundTerm("meow", [VarExp "X3"; VarExp "Y3"])]
+                )
+              )
+            ]
 
           ])
 

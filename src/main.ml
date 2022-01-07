@@ -9,12 +9,32 @@ let _ =
     rename (fresh()) (ClauseExp (CompoundTerm ("cat", []), 
                               [VarExp("X"); VarExp("Y")]))
   )) *)
-  print_string(
-    match_rules_to_string (
-      match_rules [ClauseExp (CompoundTerm ("cat", [VarExp "X"]), [])]
-      (CompoundTerm("cat", [VarExp "Y"]))
-    )
+  (eval_query_solv 
+  [CompoundTerm("b", [VarExp "K"; VarExp "Y"])]
+  [CompoundTerm("b", [VarExp "K"; VarExp "Y"])]
+  [
+        ClauseExp (CompoundTerm("a", [VarExp "X"]), []);
+        ClauseExp (CompoundTerm("b", [VarExp "X"; VarExp "Y"]), []);
+        ClauseExp (
+          CompoundTerm("b", [VarExp "Z"; VarExp"Y"]), 
+          [CompoundTerm("meow", [VarExp "X"; VarExp "Y"])]
+        )
+  ]
+  []
   )
+  (* print_string(
+    match_rules_to_string (
+      match_rules [
+        ClauseExp (CompoundTerm("a", [VarExp "X"]), []);
+        ClauseExp (CompoundTerm("b", [VarExp "X"; VarExp "Y"]), []);
+        ClauseExp (
+          CompoundTerm("b", [VarExp "Z"; VarExp"Y"]), 
+          [CompoundTerm("meow", [VarExp "X"; VarExp "Y"])]
+        )
+      ]
+      (CompoundTerm("b", [VarExp "K"; VarExp "Y"]))
+    )
+  ) *)
   (* 
 let _ =
   print_string (unify_to_string(Some [(VarExp "X", VarExp "K");(VarExp "Y", VarExp "L")])^"\n");

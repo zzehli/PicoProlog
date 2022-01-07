@@ -3,26 +3,25 @@ open Lexing
 open Parser
 
 
-let colnum pos =
-  (pos.pos_cnum - pos.pos_bol) - 1
-
-let pos_string pos =
-  let l = string_of_int pos.pos_lnum
-  and c = string_of_int ((colnum pos) + 1) in
-  "line " ^ l ^ ", column " ^ c
-
 (* interact with the lexer and the parser*)
 let parse s =
     let lexbuf = Lexing.from_string s in
     try
       let ast = Parser.main Lexer.token lexbuf in ast
     with Parser.Error ->
-      raise (Failure("Parser error at "^ (pos_string lexbuf.lex_curr_p)))
+      raise (Failure("Parser error"))
 
-
-let rule_hd exp = 
+(* given an expression, output its head *)
+let clause_hd exp = 
   match exp with ClauseExp(a, alist) -> a
                 | _ -> raise (Failure "wrong headcall input")
+
+let clause_tl exp =
+  match exp with ClauseExp(a, alist) -> alist
+                | _ -> raise (Failure "wrong body call input")
+
+(* iterate through the list and output a unit *)
+let itr f list = List.fold_left (fun acc x -> f x) () list
 (* ------------------------- PRINTING METHODS--------------------------------*)
 
 (* tokens to string*)
@@ -77,10 +76,3 @@ let match_rules_to_string lst =
    List.fold_left (fun acc elem -> acc ^ (match_rules_to_string_aux elem))
                   "" 
                   lst
-
-                  
-(* 
-  List.fold_right (
-    fun elem tf -> if tf 
-                  then tf else contains elem var
-    ) lst false    *)

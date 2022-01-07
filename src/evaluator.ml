@@ -12,14 +12,19 @@ Xi are variables in T and ti are terms to substitute variables.
 type substitution = (term_exp * term_exp) list
 
 let rec contains term var : bool = 
-                              match term with CompoundTerm (at, lst) -> 
-                              List.fold_right (
-                                  fun elem tf -> if tf 
-                                                then tf else contains elem var
-                                  ) lst false    
+                              match term with 
+                              CompoundTerm (at, lst) -> 
+                                  List.fold_right (
+                                      fun elem tf -> 
+                                        if tf 
+                                          then tf else contains elem var
+                                      ) lst false    
                               | VarExp m -> m = var
                               | _ -> false
-
+and contain_lst lst term : bool = 
+    let VarExp var = term in 
+    List.fold_left (fun acc elem -> 
+                    if acc then acc else contains elem var) false lst
 (*
 substitute a given variable with a term in a given compound term
 this is similar to apply_subst, but here the subsitition is {X = t} where as in apply_st the substitution is a list
@@ -46,6 +51,9 @@ apply a substitution to a list
 *)
 let apply_subst_lst sigma tlst : term_exp list = 
                                 List.map (apply_subst sigma) tlst
+
+let apply_subst_subst s1 s2 = 
+  List.map (fun (x1, x2) -> (apply_subst s1 x1, apply_subst s1 x2)) s2
 
 (*
 add a new pair to existing substitution
@@ -119,26 +127,49 @@ and rename_term suffix = function
 let rec match_rules db hd = 
   match db with [] -> []
           | x::xs -> let x' = rename (fresh()) x in
-                     match(unify [(rule_hd x', hd)] ) with
+                     match(unify [(hd, clause_hd x')] ) with
                      None -> match_rules xs hd
                      | Some sigma -> (sigma, x')::match_rules xs hd
 
-(* let rec eval_query_solv  db [] : exp = match svt with
-    [] -> gl
-  (* choose the first goal from the goal list *)
-  | a::slst -> match db with rule::rlst -> 
-                let rule' = rename (fresh()) rule in  
-                (match rule' with ClauseExp(a', tl) ->  
-                  (match unify(a', a) with Some sigma -> 
-                    let svt' = tl @ slst in
-                    eval_query_solv (apply_subst sigma gl) db (apply_subst_lst sigma svt')
-                    | _ -> eval_query_solv(gl db svt)
-                  )
-                )
-                                  
+let rec in_list x = function  (* List.mem *)
+  | [] -> false
+  | a::q -> a=x || (in_list x q)
+
+let rec filter l = function  (* List.filter *)
+  | [] -> []
+  | (x, t)::q -> if in_list x l then (filter l q) else (x, t)::(filter l q)
+
+let compose s1 s2 = filter (List.map fst s2) s1@apply_subst_subst s1 s2
+
+(*
+gl: original goal list: term_exp list
+svt: solvent list, current goal list: term_exp list
+db: database: exp list
+*)
+let rec eval_query_solv gl svt db subst = match svt with
+  [] -> 
+    print_string(
+      subst_to_string(List.filter (fun (x, y) -> contain_lst gl x) subst)
+    )
+    (*if solvent has 0 element, output current substitution*)
+  | x::xs -> 
+    let u = match_rules db x in
+    itr 
+      (
+        fun (s, cl)  -> eval_query_solv
+                        gl
+                        (apply_subst_lst s (clause_tl cl@xs))
+                        db
+                        (compose s subst)
+      )
+      u
+(*1. contain_list
+  2. unification instead of apply
+  *)
+
 (*
 gl
 evaluate a query input against a database
 *)
-let eval_query gl db = eval_query_solve resv db []
- *)
+(* let eval_query gl db = eval_query_solve gl gl db subst *)
+
