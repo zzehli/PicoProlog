@@ -2,16 +2,15 @@ language: generic
 
 os: linux
 env:
-  - OCAML_VERSION=4.12.0
-  - OCAML_VERSION=4.10.0
-  - OCAML_VERSION=4.08.0
+  - OCAML_VERSION=4.07.0
 
 # Install OPAM from a newer PPA
 addons:
   apt:
+    sources:
+      - sourceline: 'ppa:avsm/ocaml42+opam12'
     packages:
       - opam
-
 
 # Install the specified version of OCaml
 before_install:

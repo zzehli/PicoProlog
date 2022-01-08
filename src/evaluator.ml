@@ -139,7 +139,14 @@ let rec filter l = function  (* List.filter *)
   | [] -> []
   | (x, t)::q -> if in_list x l then (filter l q) else (x, t)::(filter l q)
 
-let compose s1 s2 = filter (List.map fst s2) s1@apply_subst_subst s1 s2
+let subst_on_couple x t = function (p, trm) -> (p, substitute (x, t) trm)
+
+let rec apply_subst_on_subst s1 s2 =
+  match s1 with
+  | [] -> s2
+  | (x, t)::q -> (apply_subst_on_subst q (List.map (subst_on_couple x t) s2))
+  
+let compose s1 s2 = (filter (List.map fst s2) s1)@(apply_subst_on_subst s1 s2)
 
 (*
 gl: original goal list: term_exp list
@@ -156,12 +163,12 @@ let rec eval_query_solv gl svt db subst = match svt with
     let u = match_rules db x in
     itr 
       (
-        fun (s, cl)  -> eval_query_solv
+        fun (s, cl)  -> (eval_query_solv 
                         gl
-                        (apply_subst_lst s (clause_tl cl@xs))
+                        (apply_subst_lst s ((clause_tl cl)@xs))
                         db
                         (compose s subst)
-      )
+      ))
       u
 (*1. contain_list
   2. unification instead of apply
