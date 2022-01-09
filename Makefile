@@ -24,4 +24,4 @@ sanity:
 
 test:
 	$(OCB) test.byte
-	./main.byte
+	./test.byte

@@ -2,7 +2,7 @@ open Lib
 open Ast
 open Evaluator
 
-let _ =
+let () =
   let rec loop () = (
     print_string "?-";
     let input = read_line() in
