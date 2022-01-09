@@ -10,7 +10,7 @@ Substitutions are of the form: sigma = {X1 = t1, X2 = t2, ... Xn = tn}, where
 Xi are variables in T and ti are terms to substitute variables.
 *)
 type substitution = (term_exp * term_exp) list
-
+(*takes a term and a variable (string) and check if the var is in the term*)
 let rec contains term var : bool = 
                               match term with 
                               CompoundTerm (at, lst) -> 
@@ -21,16 +21,19 @@ let rec contains term var : bool =
                                       ) lst false    
                               | VarExp m -> m = var
                               | _ -> false
-and contain_lst lst term : bool = 
-    let VarExp var = term in 
-    List.fold_left (fun acc elem -> 
+(*takes a VarExp and a list of terms and check if the variable in the list*)
+and contain_lst lst term : bool = match term with
+    VarExp var ->
+      List.fold_left (fun acc elem -> 
                     if acc then acc else contains elem var) false lst
+    | CompoundTerm(x, []) -> false
 (*
 substitute a given variable with a term in a given compound term
 this is similar to apply_subst, but here the subsitition is {X = t} where as in apply_st the substitution is a list
 *)                                    
 let rec substitute (var, sub) exp: term_exp = match exp 
-                  with VarExp(x) -> if var = VarExp(x) then sub else VarExp(x)
+                  with VarExp(x) -> if var = exp then sub else exp
+                      | CompoundTerm (at, []) -> if var = exp then sub else exp 
                       | CompoundTerm (at, lst) -> let lst' = 
                             List.map (
                               fun t -> substitute (var, sub) t
@@ -40,11 +43,15 @@ let rec substitute (var, sub) exp: term_exp = match exp
 (*
 apply a substitution sigma to term
 *)
-let rec apply_subst sigma term : term_exp = match sigma with 
-                                [] -> term
-                                | x::xs -> let (VarExp(var), sub) = x in 
-                                    let term' = substitute (VarExp(var), sub) term in
-                                    apply_subst xs term'
+let rec apply_subst sigma term : 
+        term_exp = match sigma with 
+                  [] -> term
+                  | x::xs -> 
+                        match x with 
+                          (var, sub) -> 
+                            let term' = substitute (var, sub) term in
+                            apply_subst xs term'
+
 
 (*
 apply a substitution to a list
@@ -135,6 +142,7 @@ let rec in_list x = function  (* List.mem *)
   | [] -> false
   | a::q -> a=x || (in_list x q)
 
+(* find unique values in l2 (where first value of the pair) not appear in l1 *)
 let rec filter l = function  (* List.filter *)
   | [] -> []
   | (x, t)::q -> if in_list x l then (filter l q) else (x, t)::(filter l q)
@@ -145,17 +153,20 @@ let rec apply_subst_on_subst s1 s2 =
   match s1 with
   | [] -> s2
   | (x, t)::q -> (apply_subst_on_subst q (List.map (subst_on_couple x t) s2))
-  
+
+  (*unique value in s1 where its first value in pair isn't the same as its counterpart in s2*)
 let compose s1 s2 = (filter (List.map fst s2) s1)@(apply_subst_on_subst s1 s2)
 
 (*
 gl: original goal list: term_exp list
 svt: solvent list, current goal list: term_exp list
 db: database: exp list
+subst: current substitution list
 *)
 let rec eval_query_solv gl svt db subst = match svt with
   [] -> 
     print_string(
+      (*only include subst whose first term appear in original goal list, exclude any atom matching*)
       subst_to_string(List.filter (fun (x, y) -> contain_lst gl x) subst)
     )
     (*if solvent has 0 element, output current substitution*)
@@ -170,9 +181,7 @@ let rec eval_query_solv gl svt db subst = match svt with
                         (compose s subst)
       ))
       u
-(*1. contain_list
-  2. unification instead of apply
-  *)
+
 
 (*
 gl
