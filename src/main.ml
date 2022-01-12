@@ -4,31 +4,33 @@ open Evaluator
 
 let () =
   let rec loop () = (
-    print_string "?-";
+    print_string "> ";
     let input = read_line() in
-    print_string (input^", correct?");
+    let res = parse input in 
+    (
+      match res with ClauseExp(_,_) -> print_string ("a clause: "^(exp_to_string res)^"\n")
+                | QueryExp(_) -> print_string ("a query: "^(exp_to_string res)^"\n")
+    )
+    ;
     loop()
   )
   in
     loop ()
-(* 
-let test_ast_to_string alst = List.map (fun s -> print_string((exp_to_string s)^"\n")) alst
+
+(* let test_ast_to_string alst = List.map (fun s -> print_string((exp_to_string s)^"\n")) alst
 let gl = [CompoundTerm("anc", [VarExp "X"; CompoundTerm ("bart", [])])]
 let subst = compose
 [(CompoundTerm("homer", []), VarExp "X1"); (CompoundTerm("bart", []), VarExp "Y1" )]
-[(VarExp "X", VarExp "X1"); (CompoundTerm("bart", []), VarExp "Y1")]
-
+[(VarExp "X", VarExp "X1"); (CompoundTerm("bart", []), VarExp "Y1")] *)
+(* 
 let _ =
     (eval_query_solv 
-    [CompoundTerm("b", [VarExp "K"; VarExp "Y"])]
-    [CompoundTerm("b", [VarExp "K"; VarExp "Y"])]
+    [CompoundTerm("parent", [VarExp "X";CompoundTerm("bart",[])])]
+    [CompoundTerm("parent", [VarExp "X";CompoundTerm("bart",[])])]
     [
-          ClauseExp (CompoundTerm("a", [VarExp "X"]), []);
-          ClauseExp (CompoundTerm("b", [VarExp "X"; VarExp "Y"]), []);
-          ClauseExp (
-            CompoundTerm("b", [VarExp "Z"; VarExp"Y"]), 
-            [CompoundTerm("meow", [VarExp "X"; VarExp "Y"])]
-          )
+          ClauseExp (CompoundTerm("ancestor", [VarExp "X"; VarExp "Y"]), 
+                    [CompoundTerm("parent", [VarExp "X"; VarExp "Y"])]);
+          ClauseExp (CompoundTerm("parent", [CompoundTerm("homer",[]);         CompoundTerm("bart",[])]), []);
     ]
     []
     ) *)
