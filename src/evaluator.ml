@@ -187,5 +187,5 @@ let rec eval_query_solv gl svt db subst = match svt with
 gl
 evaluate a query input against a database
 *)
-(* let eval_query gl db = eval_query_solve gl gl db subst *)
+let eval_query gl db = eval_query_solv gl gl db []
 

@@ -1,21 +1,11 @@
 open Lib
 open Ast
 open Evaluator
+open Repl
 
-let () =
-  let rec loop () = (
-    print_string "> ";
-    let input = read_line() in
-    let res = parse input in 
-    (
-      match res with ClauseExp(_,_) -> print_string ("a clause: "^(exp_to_string res)^"\n")
-                | QueryExp(_) -> print_string ("a query: "^(exp_to_string res)^"\n")
-    )
-    ;
-    loop()
-  )
-  in
-    loop ()
+let _ =
+    let db = [] in 
+    repl db
 
 (* let test_ast_to_string alst = List.map (fun s -> print_string((exp_to_string s)^"\n")) alst
 let gl = [CompoundTerm("anc", [VarExp "X"; CompoundTerm ("bart", [])])]

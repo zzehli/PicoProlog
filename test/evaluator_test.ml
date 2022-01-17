@@ -144,7 +144,7 @@ let evaluator_test_unify =
             ([ClauseExp (CompoundTerm("atom", [VarExp "X"]), [])],
               CompoundTerm("atom", [VarExp "Y"; VarExp "X"])
             ),
-              [];
+            [];
             (*two rules out of three match*)
             (
               [
