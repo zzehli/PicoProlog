@@ -175,11 +175,12 @@ let rec eval_query_solv gl svt db subst = match svt with
     itr 
       (
         fun (s, cl)  -> (eval_query_solv 
-                        gl
-                        (apply_subst_lst s ((clause_tl cl)@xs))
-                        db
-                        (compose s subst)
-      ))
+                          gl
+                          (apply_subst_lst s ((clause_tl cl)@xs))
+                          db
+                          (compose s subst)
+                        )
+        )
       u
 
 

@@ -146,7 +146,7 @@ let evaluator_test_unify =
             ),
             [];
             (*two rules out of three match*)
-            (
+            (* (
               [
                 ClauseExp (CompoundTerm("a", [VarExp "X"]), []);
                 ClauseExp (CompoundTerm("b", [VarExp "X"; VarExp "Y"]), []);
@@ -169,7 +169,7 @@ let evaluator_test_unify =
                   [CompoundTerm("meow", [VarExp "X3"; VarExp "Y3"])]
                 )
               )
-            ]
+            ] *)
 
           ])
 
