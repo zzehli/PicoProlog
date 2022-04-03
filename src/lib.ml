@@ -48,6 +48,20 @@ let rec term_exp_to_string s = match s with
   | CompoundTerm (a, lst) -> 
     "CompoundTerm " ^ "(" ^ a ^ ", ["^ (String.concat "; " (List.map term_exp_to_string lst))^"])"
 
+(*AST to rest*)
+let rec term_exp_to_res t = match t with
+ IntConst i -> string_of_int i
+ | FloatConst f -> string_of_float f
+ | VarExp v -> v
+ | CompoundTerm (a, lst) -> 
+                  (match lst with 
+                    [] -> a
+                    | x::xs -> a ^ "( " ^ (
+                                            String.concat "; " (
+                                              List.map term_exp_to_res lst
+                                              )
+                                          )^ ")")
+    
 let rec exp_to_string = function 
   | ClauseExp (t1, tlst) -> 
     term_exp_to_string t1 ^":- ["^(
@@ -57,11 +71,15 @@ let rec exp_to_string = function
       String.concat "; " (List.map term_exp_to_string tlst)
       )^"]"
 
-
+(*subst for testing*)
 let subst_to_string lst = 
 (match lst with [] -> "[]" 
 | x::xs -> List.fold_left (fun str elem -> let (x, y) = elem in str ^(term_exp_to_string x) ^ "|--> " ^ (term_exp_to_string y )^ ";; ")  "" lst )
 
+(*subst for printing results*)
+let subst_to_res lst =
+match lst with [] -> "None"
+      | x::xs -> List.fold_left (fun str elem -> let (x, y) = elem in str ^ (term_exp_to_res x) ^ " = " ^ (term_exp_to_res y) ^ "\n") "" lst
 let unify_to_string = function
   | Some lst -> subst_to_string lst
   | None -> "None"

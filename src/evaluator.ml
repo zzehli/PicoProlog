@@ -167,7 +167,7 @@ let rec eval_query_solv gl svt db subst = match svt with
   [] -> 
     print_string(
       (*only include subst whose first term appear in original goal list, exclude any atom matching*)
-      subst_to_string(List.filter (fun (x, y) -> contain_lst gl x) subst)
+      subst_to_res(List.filter (fun (x, y) -> contain_lst gl x) subst)
     )
     (*if solvent has 0 element, output current substitution*)
   | x::xs -> 
