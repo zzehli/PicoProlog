@@ -129,7 +129,7 @@ and rename_term suffix = function
     | _ as e -> e
 
 (* Given a term, and a list of rules, find if the term unifies with any of the
-  term unifies with any of the (renamed) rules, if so save the substitution, 
+    any of the (renamed) rules, if so save the substitution, 
     then return the list of substitutions and corresponding rules *)
 let rec match_rules db hd = 
   match db with [] -> []

@@ -13,6 +13,27 @@ The `make` command will run the `Makefile` to build the executible `main.byte`, 
 ./main.byte
 ```
 
+# Sample Run
+Here is a sample session:
+```
+prolog (main) ❱ ./main.byte 
+> ancestor(X, Y) :- parent(X, Y).
+> parent(abe, homer).
+> parent(abe, herbert).
+> parent(homer, bart).
+> ?- ancestor(X, bart).
+X = homer
+> parent(marge, bart).
+> ?- ancestor(X, bart).
+X = marge
+X = homer
+> ancestor(X, Y) :- parent(Z, Y), ancestor(X, Z).
+> ?- ancestor(X, bart).
+X = abe
+X = marge
+X = homer
+```
+
 # Run Tests
 The testing framework is built with:
 ```
