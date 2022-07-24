@@ -63,3 +63,18 @@ This is where the concrete grammar and the abstract syntax comes together. We fi
 The concrete syntax of PicoProlog is based on the ISO Prolog and ECLiPSe Prolog. In prolog, the only data type is `term`, which is comprised of number, variable, atom, and compound term. Therefore, the central task is to define the syntax for term. Besides term, we also define special symbols such as `:-` and `?-`, which are elements connecting terms to form rules and queries.
 
 The first rule in the BNF grammar above states that there are three kinds of statements accepted by PicoProlog, differentiated by the special symbols `:-` and `?-`. **Facts** (or predicates) are true statement the require no further action. It's syntax involves none of the two symbols. **Rules** consist of a head and a body connected by a RULE symbol, `:-`. The head can be seen as a fact with no body. If the fact include variables as parameters, the variables are further defined in the body, which is a list of facts connected by comma, the conjunction relation. A full implementation of prolog allows other logic relations such as implication, disjunction, etc. A collection of facts and rules is called database. For a given database, Prolog uses **queries** to ask questions. Queries starts with `-?`.
+
+# Reference
+## Documents and Books
+unknow, Appendix A: An Introduction to Prolog
+Clocksin and Mellish, Programming in Prolog
+Spivey, An introduction to logic programming through Prolog
+Deransart, Ed-Dbali and Cervoni, Prolog: The Standard
+Sterling and Shapiro, The Art of Prolog
+Boizumault, The Implementation of Prolog
+# Other implementations
+SICStus Prolog
+Eclipse Prolog
+miniprolog on Programming Zoo: https://plzoo.andrej.com/language/miniprolog.html
+tiny prolog in OCaml: https://naereen.github.io/Tiny-Prolog-in-OCaml/
+
