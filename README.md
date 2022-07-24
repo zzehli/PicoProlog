@@ -66,23 +66,15 @@ The first rule in the BNF grammar above states that there are three kinds of sta
 
 # Reference
 ## Documents and Books
-unknow, Appendix A: An Introduction to Prolog
-
-Clocksin and Mellish, Programming in Prolog
-
-Spivey, An introduction to logic programming through Prolog
-
-Deransart, Ed-Dbali and Cervoni, Prolog: The Standard
-
-Sterling and Shapiro, The Art of Prolog
-
+unknow, Appendix A: An Introduction to Prolog  
+Clocksin and Mellish, Programming in Prolog  
+Spivey, An introduction to logic programming through Prolog  
+Deransart, Ed-Dbali and Cervoni, Prolog: The Standard  
+Sterling and Shapiro, The Art of Prolog  
 Boizumault, The Implementation of Prolog
 # Other implementations
-SICStus Prolog
-
-Eclipse Prolog
-
-miniprolog on Programming Zoo: https://plzoo.andrej.com/language/miniprolog.html
-
+SICStus Prolog  
+Eclipse Prolog  
+miniprolog on Programming Zoo: https://plzoo.andrej.com/language/miniprolog.html  
 tiny prolog in OCaml: https://naereen.github.io/Tiny-Prolog-in-OCaml/
 
