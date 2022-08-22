@@ -72,7 +72,7 @@ Spivey, An introduction to logic programming through Prolog
 Deransart, Ed-Dbali and Cervoni, Prolog: The Standard  
 Sterling and Shapiro, The Art of Prolog  
 Boizumault, The Implementation of Prolog
-# Other implementations
+## Other implementations
 SICStus Prolog  
 Eclipse Prolog  
 miniprolog on Programming Zoo: https://plzoo.andrej.com/language/miniprolog.html  
